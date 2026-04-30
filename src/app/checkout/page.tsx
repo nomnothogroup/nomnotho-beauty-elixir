@@ -16,8 +16,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      setLoading(false);
+      setUser(data.user); setLoading(false);
       if (data.user) setForm(prev => ({ ...prev, email: data.user.email || '', firstName: data.user.user_metadata?.name || '' }));
     });
     setOrderNumber('NOM-' + Date.now().toString(36).toUpperCase());
@@ -27,29 +26,27 @@ export default function CheckoutPage() {
   const discount = subtotal * 0.10;
   const total = subtotal - discount + delivery;
   const bankQRValue = 'bank:standardbank|acc:251443574|name:Nomnotho+Group+of+Companies|branch:051001|ref:' + orderNumber + '|amount:' + total.toFixed(2);
+  const snapscanLink = 'https://pos.snapscan.io/qr/F3qZGjuq?amount=' + (total * 100);
 
   const sendWhatsApp = () => {
     const itemsList = state.items.map(i => i.name + ' x' + i.quantity).join(', ');
     window.open('https://wa.me/27761286545?text=' + encodeURIComponent('Order: ' + orderNumber + ' | Total: R' + total.toFixed(2) + ' | Items: ' + itemsList), '_blank');
   };
 
-  const handlePayWithYoco = () => {
-    window.open('https://pay.yoco.com/nomnotho-group-of-companies?amount=' + (total * 100), '_blank');
-    sendWhatsApp();
-    dispatch({ type: 'CLEAR_CART' });
-    window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
-  };
-
   const handlePlaceOrder = () => {
-    if (paymentMethod === 'paypal') {
+    if (paymentMethod === 'yoco') {
+      window.open('https://pay.yoco.com/nomnotho-group-of-companies?amount=' + (total * 100), '_blank');
+    } else if (paymentMethod === 'paypal') {
       window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=godfreysiwela@gmail.com&amount=' + total.toFixed(2) + '&currency_code=ZAR&item_name=Nomnotho+Order+' + orderNumber, '_blank');
+    } else if (paymentMethod === 'snapscan') {
+      window.open(snapscanLink, '_blank');
     }
     sendWhatsApp();
     dispatch({ type: 'CLEAR_CART' });
     window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
   };
 
-  if (loading) return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' }, React.createElement('p', { className: 'text-gray-900' }, 'Loading...'));
+  if (loading) return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' }, React.createElement('p', null, 'Loading...'));
 
   if (!user) {
     return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' },
@@ -70,6 +67,13 @@ export default function CheckoutPage() {
       )
     );
   }
+
+  const paymentMethods = [
+    { id: 'yoco', name: 'Yoco Card Payment', icon: 'Y', bg: '#1F3D2B', desc: 'Debit/Credit Card' },
+    { id: 'snapscan', name: 'SnapScan', icon: 'S', bg: '#FF5722', desc: 'Scan & Pay via SnapScan' },
+    { id: 'paypal', name: 'PayPal', icon: 'P', bg: '#0070BA', desc: 'godfreysiwela@gmail.com' },
+    { id: 'bank', name: 'Standard Bank EFT', icon: 'SB', bg: '#0033A0', desc: 'Account: 251443574' }
+  ];
 
   return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8]' },
     React.createElement('section', { className: 'bg-gradient-to-br from-[#1F3D2B] to-[#2d5a3f] py-16 text-center text-white' },
@@ -93,19 +97,25 @@ export default function CheckoutPage() {
         ),
         step === 2 && React.createElement('div', { className: 'bg-white rounded-2xl p-8 shadow-lg' },
           React.createElement('h2', { className: 'text-2xl font-bold text-[#1F3D2B] mb-6' }, 'Payment Method'),
-          ['yoco', 'paypal', 'bank'].map(method =>
-            React.createElement('div', { key: method, onClick: () => setPaymentMethod(method), className: 'p-5 border-2 rounded-xl cursor-pointer mb-3 ' + (paymentMethod === method ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
+          paymentMethods.map(m =>
+            React.createElement('div', { key: m.id, onClick: () => setPaymentMethod(m.id), className: 'p-5 border-2 rounded-xl cursor-pointer mb-3 ' + (paymentMethod === m.id ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
               React.createElement('div', { className: 'flex items-center gap-4' },
-                React.createElement('div', { className: 'w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg', style: { background: method === 'yoco' ? '#1F3D2B' : method === 'paypal' ? '#0070BA' : '#0033A0' } }, method === 'yoco' ? 'Y' : method === 'paypal' ? 'P' : 'SB'),
+                React.createElement('div', { className: 'w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg', style: { background: m.bg } }, m.icon),
                 React.createElement('div', null,
-                  React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, method === 'yoco' ? 'Yoco Card Payment' : method === 'paypal' ? 'PayPal' : 'Standard Bank EFT'),
-                  React.createElement('p', { className: 'text-gray-600 text-sm' }, method === 'yoco' ? 'Pay securely with card via Yoco' : method === 'paypal' ? 'godfreysiwela@gmail.com' : 'Acc: 251443574')
+                  React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, m.name),
+                  React.createElement('p', { className: 'text-gray-600 text-sm' }, m.desc)
                 ),
-                paymentMethod === method && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '')
+                paymentMethod === m.id && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '')
               )
             )
           ),
+          paymentMethod === 'snapscan' && React.createElement('div', { className: 'p-5 bg-[#F5F1E8] rounded-xl mt-4 text-center' },
+            React.createElement('p', { className: 'font-bold text-gray-900 mb-3' }, 'Scan with SnapScan to Pay R' + total.toFixed(2)),
+            React.createElement('img', { src: 'https://pos.snapscan.io/qr/F3qZGjuq', alt: 'SnapScan QR', style: { width: '180px', height: '180px' } }),
+            React.createElement('p', { className: 'text-sm text-gray-600 mt-3' }, 'Or tap the Pay button on the next step')
+          ),
           paymentMethod === 'bank' && React.createElement('div', { className: 'p-5 bg-[#F5F1E8] rounded-xl mt-4 text-center' },
+            React.createElement('p', { className: 'font-bold text-gray-900 mb-3' }, 'Scan or Use Details Below'),
             React.createElement(QRCodeSVG, { value: bankQRValue, size: 150, level: 'H', fgColor: '#1F3D2B' }),
             React.createElement('div', { className: 'grid grid-cols-2 gap-2 mt-3 text-sm text-gray-900 text-left' },
               React.createElement('div', null, React.createElement('strong', null, 'Bank:'), ' Standard Bank'),
@@ -128,19 +138,18 @@ export default function CheckoutPage() {
             )
           ),
           React.createElement('div', { className: 'bg-[#F5F1E8] rounded-xl p-4 mt-4 text-gray-900' },
-            ['Subtotal', '10% Discount', 'Delivery', 'Total'].map((label, i) => {
-              const values = [subtotal.toFixed(2), '-' + discount.toFixed(2), delivery === 0 ? 'FREE' : 'R99', total.toFixed(2)];
-              const isBold = i === 3;
-              return React.createElement('div', { key: label, className: 'flex justify-between mb-2 ' + (i === 1 ? 'text-green-600 font-semibold' : '') + (isBold ? ' text-xl font-bold border-t-2 border-[#C6A75E] pt-2' : '') },
-                React.createElement('span', null, label), React.createElement('span', null, 'R' + values[i])
-              );
-            })
+            React.createElement('div', { className: 'flex justify-between mb-2' }, React.createElement('span', null, 'Subtotal'), React.createElement('span', null, 'R' + subtotal.toFixed(2))),
+            React.createElement('div', { className: 'flex justify-between mb-2 text-green-600 font-semibold' }, React.createElement('span', null, '10% Discount'), React.createElement('span', null, '-R' + discount.toFixed(2))),
+            React.createElement('div', { className: 'flex justify-between mb-2 ' + (delivery === 0 ? 'text-green-600 font-bold' : '') }, React.createElement('span', null, 'Delivery'), React.createElement('span', null, delivery === 0 ? 'FREE' : 'R99')),
+            React.createElement('div', { className: 'flex justify-between text-xl font-bold border-t-2 border-[#C6A75E] pt-2' }, React.createElement('span', null, 'Total'), React.createElement('span', null, 'R' + total.toFixed(2)))
+          ),
+          React.createElement('div', { className: 'bg-[#FFFDF5] border border-[#C6A75E] rounded-xl p-3 mt-3 text-center' },
+            React.createElement('p', { className: 'font-semibold text-[#1F3D2B]' }, 'Payment: ' + paymentMethods.find(m => m.id === paymentMethod)?.name),
+            React.createElement('p', { className: 'text-xs text-gray-500' }, 'Ref: ' + orderNumber)
           ),
           React.createElement('div', { className: 'flex gap-4 mt-6' },
             React.createElement('button', { onClick: () => setStep(2), className: 'flex-1 bg-white border-2 border-[#1F3D2B] text-[#1F3D2B] py-3 rounded-xl font-bold' }, 'Back'),
-            paymentMethod === 'yoco'
-              ? React.createElement('button', { onClick: handlePayWithYoco, className: 'flex-1 py-3 rounded-xl font-bold bg-[#C6A75E] text-white' }, 'Pay R' + total.toFixed(2) + ' via Yoco')
-              : React.createElement('button', { onClick: handlePlaceOrder, className: 'flex-1 py-3 rounded-xl font-bold bg-[#C6A75E] text-white' }, 'Place Order')
+            React.createElement('button', { onClick: handlePlaceOrder, className: 'flex-1 py-3 rounded-xl font-bold bg-[#C6A75E] text-white' }, 'Pay R' + total.toFixed(2) + ' & Place Order')
           )
         )
       )
