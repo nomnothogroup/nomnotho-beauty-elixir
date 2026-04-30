@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/lib/cart-context';
 import Link from 'next/link';
+import { QRCodeSVG } from 'qrcode.react';
 
 export default function CheckoutPage() {
   const { state, subtotal, dispatch } = useCart();
@@ -15,6 +16,9 @@ export default function CheckoutPage() {
   const delivery = 99;
   const discount = subtotal * 0.10;
   const total = subtotal - discount + delivery;
+  const yocoApiKey = 'pk_live_002aad46P4dbMdVb5e14';
+
+  const bankQRValue = 'bank:standardbank|acc:251443574|name:Nomnotho+Group+of+Companies|branch:051001|ref:' + orderNumber + '|amount:' + total.toFixed(2);
 
   const sendWhatsApp = () => {
     const itemsList = state.items.map(i => i.name + ' x' + i.quantity).join(', ');
@@ -23,6 +27,7 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = () => {
     if (paymentMethod === 'paypal') window.open('https://paypal.me/godfreysiwela/' + total.toFixed(2), '_blank');
+    if (paymentMethod === 'yoco') window.open('https://pay.yoco.com/?amount=' + (total * 100) + '&reference=' + orderNumber, '_blank');
     sendWhatsApp();
     dispatch({ type: 'CLEAR_CART' });
     window.location.href = '/thank-you?ref=' + orderNumber;
@@ -72,10 +77,15 @@ export default function CheckoutPage() {
               React.createElement('div', { className: 'w-12 h-12 bg-[#1F3D2B] rounded-xl flex items-center justify-center text-white font-bold text-lg' }, 'Y'),
               React.createElement('div', null,
                 React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Yoco Card Payment'),
-                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Pay securely with debit or credit card')
+                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Pay with debit/credit card via Yoco secure gateway')
               ),
               paymentMethod === 'yoco' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
             )
+          ),
+          paymentMethod === 'yoco' && React.createElement('div', { className: 'mt-4 p-5 bg-[#F5F1E8] rounded-xl text-center' },
+            React.createElement('p', { className: 'text-gray-900 font-semibold mb-2' }, 'You will be redirected to Yoco secure payment gateway'),
+            React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Amount: R' + total.toFixed(2)),
+            React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Reference: ' + orderNumber)
           ),
           React.createElement('div', { onClick: () => setPaymentMethod('paypal'), className: 'p-5 border-2 rounded-xl cursor-pointer ' + (paymentMethod === 'paypal' ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
             React.createElement('div', { className: 'flex items-center gap-4' },
@@ -91,23 +101,29 @@ export default function CheckoutPage() {
             React.createElement('div', { className: 'flex items-center gap-4' },
               React.createElement('div', { className: 'w-12 h-12 bg-[#0033A0] rounded-xl flex items-center justify-center text-white font-bold text-sm' }, 'SB'),
               React.createElement('div', null,
-                React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Standard Bank EFT'),
+                React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Standard Bank EFT + QR Code'),
                 React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Account: 251443574')
               ),
               paymentMethod === 'bank' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
             )
-          )
-        ),
-        paymentMethod === 'bank' && React.createElement('div', { className: 'mt-6 p-6 bg-[#F5F1E8] rounded-xl text-center' },
-          React.createElement('h4', { className: 'font-bold text-gray-900 mb-4' }, 'Banking Details'),
-          React.createElement('div', { className: 'grid grid-cols-2 gap-3 text-left text-gray-900' },
-            React.createElement('div', null, React.createElement('strong', null, 'Bank:'), ' Standard Bank'),
-            React.createElement('div', null, React.createElement('strong', null, 'Account:'), ' 251443574'),
-            React.createElement('div', null, React.createElement('strong', null, 'Name:'), ' Nomnotho Group of Companies'),
-            React.createElement('div', null, React.createElement('strong', null, 'Branch:'), ' 051001'),
-            React.createElement('div', { className: 'col-span-2' }, React.createElement('strong', null, 'Reference: '), orderNumber)
           ),
-          React.createElement('p', { className: 'text-sm text-gray-600 mt-4' }, 'Send proof of payment to info@nomnothobeautystudio.co.za or WhatsApp 0761286545')
+          paymentMethod === 'bank' && React.createElement('div', { className: 'mt-6 p-6 bg-[#F5F1E8] rounded-xl' },
+            React.createElement('h4', { className: 'font-bold text-gray-900 mb-4 text-center text-lg' }, 'Scan QR Code to Pay'),
+            React.createElement('div', { className: 'flex justify-center mb-4' },
+              React.createElement('div', { className: 'bg-white p-4 rounded-xl inline-block' },
+                React.createElement(QRCodeSVG, { value: bankQRValue, size: 160, level: 'H', fgColor: '#1F3D2B' })
+              )
+            ),
+            React.createElement('p', { className: 'text-center text-sm text-gray-600 mb-4' }, 'Scan with any South African banking app'),
+            React.createElement('div', { className: 'grid grid-cols-2 gap-3 text-gray-900 bg-white p-4 rounded-lg' },
+              React.createElement('div', null, React.createElement('strong', null, 'Bank:'), ' Standard Bank'),
+              React.createElement('div', null, React.createElement('strong', null, 'Account:'), ' 251443574'),
+              React.createElement('div', null, React.createElement('strong', null, 'Name:'), ' Nomnotho Group of Companies'),
+              React.createElement('div', null, React.createElement('strong', null, 'Branch:'), ' 051001'),
+              React.createElement('div', { className: 'col-span-2' }, React.createElement('strong', null, 'Reference: '), orderNumber)
+            ),
+            React.createElement('p', { className: 'text-sm text-gray-600 mt-4 text-center' }, 'Send proof of payment to info@nomnothobeautystudio.co.za or WhatsApp 0761286545')
+          )
         ),
         React.createElement('div', { className: 'flex gap-4 mt-8' },
           React.createElement('button', { onClick: () => setStep(1), className: 'flex-1 bg-white border-2 border-[#1F3D2B] text-[#1F3D2B] py-3 rounded-xl font-bold' }, 'Back'),
