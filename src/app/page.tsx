@@ -24,22 +24,22 @@ export default function HomePage() {
   ];
 
   const featuredProducts = [
-    { id: 1, name: 'Marula Deep Hydration Oil', price: 380, rating: 4.9, reviews: 312, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
-    { id: 2, name: 'Shea Luxe Body Butter', price: 229, rating: 4.8, reviews: 312, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
-    { id: 3, name: 'Imbali Spot Dots', price: 150, rating: 4.7, reviews: 234, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
-    { id: 4, name: 'Rooibos Repair Night Creme', price: 295, rating: 4.8, reviews: 203, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
-    { id: 5, name: 'Rooibos Antioxidant Mist', price: 175, rating: 4.6, reviews: 203, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
-    { id: 6, name: 'Selina Daily Shield SPF40', price: 310, rating: 4.7, reviews: 198, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
-    { id: 7, name: 'Niacinamide Pore Serum', price: 285, rating: 4.5, reviews: 176, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
-    { id: 8, name: 'Moringa Brightening Cleanser', price: 220, rating: 4.6, reviews: 167, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
-    { id: 9, name: 'African Gold Tissue Oil', price: 260, rating: 4.8, reviews: 156, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
-    { id: 10, name: 'Vitamin C Glow Drops', price: 335, rating: 4.7, reviews: 154, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
-    { id: 11, name: 'Buchu Clarifying Serum', price: 315, rating: 4.6, reviews: 145, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
-    { id: 12, name: 'Marula Radiance Elixir', price: 320, rating: 4.9, reviews: 124, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
-    { id: 13, name: 'Kalahari Eye Cream', price: 290, rating: 4.8, reviews: 112, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
-    { id: 14, name: 'Baobab Glow Creme', price: 280, rating: 4.7, reviews: 98, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
-    { id: 15, name: 'Ubuntu Glow Hydra-Serum', price: 350, rating: 4.9, reviews: 89, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
-    { id: 16, name: 'Baobab Enzyme Exfoliant', price: 245, rating: 4.6, reviews: 89, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' }
+    { id: 1, name: 'Marula Deep Hydration Oil', price: 380, rating: 4.9, reviews: 312, quantity: 1, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
+    { id: 2, name: 'Shea Luxe Body Butter', price: 229, rating: 4.8, reviews: 312, quantity: 1, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
+    { id: 3, name: 'Imbali Spot Dots', price: 150, rating: 4.7, reviews: 234, quantity: 1, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
+    { id: 4, name: 'Rooibos Repair Night Creme', price: 295, rating: 4.8, reviews: 203, quantity: 1, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
+    { id: 5, name: 'Rooibos Antioxidant Mist', price: 175, rating: 4.6, reviews: 203, quantity: 1, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
+    { id: 6, name: 'Selina Daily Shield SPF40', price: 310, rating: 4.7, reviews: 198, quantity: 1, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
+    { id: 7, name: 'Niacinamide Pore Serum', price: 285, rating: 4.5, reviews: 176, quantity: 1, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
+    { id: 8, name: 'Moringa Brightening Cleanser', price: 220, rating: 4.6, reviews: 167, quantity: 1, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
+    { id: 9, name: 'African Gold Tissue Oil', price: 260, rating: 4.8, reviews: 156, quantity: 1, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
+    { id: 10, name: 'Vitamin C Glow Drops', price: 335, rating: 4.7, reviews: 154, quantity: 1, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
+    { id: 11, name: 'Buchu Clarifying Serum', price: 315, rating: 4.6, reviews: 145, quantity: 1, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
+    { id: 12, name: 'Marula Radiance Elixir', price: 320, rating: 4.9, reviews: 124, quantity: 1, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
+    { id: 13, name: 'Kalahari Eye Cream', price: 290, rating: 4.8, reviews: 112, quantity: 1, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
+    { id: 14, name: 'Baobab Glow Creme', price: 280, rating: 4.7, reviews: 98, quantity: 1, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
+    { id: 15, name: 'Ubuntu Glow Hydra-Serum', price: 350, rating: 4.9, reviews: 89, quantity: 1, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
+    { id: 16, name: 'Baobab Enzyme Exfoliant', price: 245, rating: 4.6, reviews: 89, quantity: 1, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' }
   ];
 
   const ingredients = [
@@ -54,7 +54,7 @@ export default function HomePage() {
   ];
 
   const addToCart = (p: any) => {
-    dispatch({ type: 'ADD_ITEM', payload: { id: p.id, name: p.name, price: p.price, image: p.image } });
+    dispatch({ type: 'ADD_ITEM', payload: { id: p.id, name: p.name, price: p.price, quantity: 1, image: p.image } });
   };
 
   const renderStars = (r: number) => {
@@ -92,11 +92,9 @@ export default function HomePage() {
         )
       )
     ),
-
     React.createElement('section', { style: { padding: '80px 0', background: 'white' } },
       React.createElement('div', { className: 'max-w-7xl mx-auto px-4' },
         React.createElement('h2', { style: { fontSize: '32px', fontWeight: 'bold', color: '#1F3D2B', textAlign: 'center' } }, 'Featured Products'),
-        React.createElement('p', { style: { textAlign: 'center', color: '#8B5E3C', marginBottom: '40px' } }, 'Our most loved Nomnotho Elixir products'),
         React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' } },
           featuredProducts.map(p =>
             React.createElement('div', { key: p.id, style: { background: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(31,61,43,0.08)' } },
@@ -114,7 +112,6 @@ export default function HomePage() {
         )
       )
     ),
-
     React.createElement('section', { style: { padding: '80px 0', background: '#F5F1E8' } },
       React.createElement('div', { className: 'max-w-6xl mx-auto px-4' },
         React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' } },
@@ -122,24 +119,22 @@ export default function HomePage() {
             React.createElement('p', { style: { color: '#C6A75E', fontWeight: '600', letterSpacing: '2px', marginBottom: '12px' } }, 'Our Story'),
             React.createElement('h2', { style: { fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B', marginBottom: '24px' } }, 'A Woman-Owned African Herbal Concept'),
             React.createElement('p', { style: { color: '#4a5568', lineHeight: '1.8', marginBottom: '16px' } }, 'Nomnotho Beauty Studio is a movement rooted in African botanical wisdom.'),
-            React.createElement(Link, { href: '/about', style: { color: '#C6A75E', fontWeight: '600', fontSize: '16px', textDecoration: 'none' } }, 'Read Our Full Story ')
+            React.createElement(Link, { href: '/about', style: { color: '#C6A75E', fontWeight: '600', fontSize: '16px', textDecoration: 'none' } }, 'Read Our Full Story \u2192')
           ),
           React.createElement('div', { style: { background: 'linear-gradient(135deg, #1F3D2B, #2d5a3f)', borderRadius: '24px', padding: '60px 40px', textAlign: 'center', color: 'white' } },
-            React.createElement('span', { style: { fontSize: '80px', display: 'block' } }, ''),
-            React.createElement('p', { style: { fontSize: '20px', color: '#C6A75E', fontStyle: 'italic' } }, '"Natural + Premium + Healing"')
+            React.createElement('span', { style: { fontSize: '80px', display: 'block' } }, '\uD83C\uDF3F'),
+            React.createElement('p', { style: { fontSize: '20px', color: '#C6A75E', fontStyle: 'italic' } }, 'Natural + Premium + Healing')
           )
         )
       )
     ),
-
     React.createElement('section', { style: { padding: '80px 0', background: 'white' } },
       React.createElement('div', { className: 'max-w-6xl mx-auto px-4' },
         React.createElement('h2', { style: { fontSize: '32px', fontWeight: 'bold', color: '#1F3D2B', textAlign: 'center' } }, 'Our Heritage'),
-        React.createElement('p', { style: { textAlign: 'center', color: '#8B5E3C', marginBottom: '40px' } }, 'South African Botanical Heritage'),
         React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' } },
           ingredients.map((item, i) =>
             React.createElement('div', { key: i, style: { background: '#F5F1E8', borderRadius: '16px', padding: '24px', textAlign: 'center' } },
-              React.createElement('span', { style: { fontSize: '36px', display: 'block', marginBottom: '8px' } }, ''),
+              React.createElement('span', { style: { fontSize: '36px', display: 'block', marginBottom: '8px' } }, '\uD83C\uDF31'),
               React.createElement('h3', { style: { fontWeight: 'bold', color: '#1F3D2B' } }, item.name),
               React.createElement('p', { style: { color: '#8B5E3C', fontSize: '13px' } }, item.location)
             )
@@ -147,7 +142,6 @@ export default function HomePage() {
         )
       )
     ),
-
     React.createElement('section', { style: { background: 'linear-gradient(to right, #1F3D2B, #2d5a3f)', padding: '80px 0', textAlign: 'center' } },
       React.createElement('h2', { style: { fontSize: '32px', fontWeight: 'bold', color: '#F5F1E8' } }, 'Ready to Transform Your Beauty Routine?'),
       React.createElement('p', { style: { color: '#C6A75E', fontSize: '18px', marginBottom: '32px' } }, 'Experience the power of African botanicals'),
