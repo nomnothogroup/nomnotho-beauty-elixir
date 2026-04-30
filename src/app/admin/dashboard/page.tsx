@@ -14,7 +14,7 @@ export default function AdminDashboard() {
   ]);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [form, setForm] = useState({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', rating: '4.5', image: '', description: '' });
+  const [form, setForm] = useState({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', image: '' });
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !localStorage.getItem('nomnotho_admin')) {
@@ -28,22 +28,26 @@ export default function AdminDashboard() {
 
   const openEdit = (product: any) => {
     setEditingProduct(product);
-    setForm({ name: product.name, category: product.category, price: product.price.toString(), oldPrice: product.oldPrice?.toString() || '', stock: product.stock.toString(), rating: product.rating?.toString() || '4.5', image: product.image || '', description: product.description || '' });
+    setForm({ name: product.name, category: product.category, price: product.price.toString(), oldPrice: product.oldPrice?.toString() || '', stock: product.stock.toString(), image: product.image || '' });
     setShowAddForm(false);
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    const defaultImage = 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=100&h=100&fit=crop';
     if (editingProduct) {
-      setProducts(products.map(p => p.id === editingProduct.id ? { ...p, name: form.name, category: form.category, price: parseFloat(form.price), stock: parseInt(form.stock), image: form.image } : p));
+      setProducts(products.map(p => p.id === editingProduct.id ? { ...p, name: form.name, category: form.category, price: parseFloat(form.price), stock: parseInt(form.stock), image: form.image || p.image } : p));
       setEditingProduct(null);
     } else {
-      const newProduct = { id: Date.now(), name: form.name, category: form.category, price: parseFloat(form.price), stock: parseInt(form.stock), active: true, image: form.image || 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=100&h=100&fit=crop' };
+      const newProduct = { id: Date.now(), name: form.name, category: form.category, price: parseFloat(form.price), stock: parseInt(form.stock), active: true, image: form.image || defaultImage };
       setProducts([newProduct, ...products]);
       setShowAddForm(false);
     }
-    setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', rating: '4.5', image: '', description: '' });
+    setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', image: '' });
   };
+
+  const inputStyle = { width: '100%', padding: '12px', border: '2px solid #d1d5db', borderRadius: '8px', fontSize: '15px', color: '#111827', background: '#ffffff', outline: 'none' };
+  const labelStyle = { display: 'block', marginBottom: '6px', fontWeight: '600', color: '#111827', fontSize: '14px' };
 
   return (
     <div style={{ minHeight: '100vh', background: '#F5F1E8' }}>
@@ -62,16 +66,16 @@ export default function AdminDashboard() {
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
-          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(31,61,43,0.06)' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Total Products</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B' }}>{products.length}</p></div>
-          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(31,61,43,0.06)' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Active</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#16a34a' }}>{products.filter(p => p.active).length}</p></div>
-          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(31,61,43,0.06)' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Categories</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B' }}>5</p></div>
-          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(31,61,43,0.06)' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Total Stock</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B' }}>{products.reduce((s: number, p: any) => s + p.stock, 0)}</p></div>
+          <div style={{ background: 'white', padding: '24px', borderRadius: '16px' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Total Products</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B' }}>{products.length}</p></div>
+          <div style={{ background: 'white', padding: '24px', borderRadius: '16px' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Active</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#16a34a' }}>{products.filter(p => p.active).length}</p></div>
+          <div style={{ background: 'white', padding: '24px', borderRadius: '16px' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Categories</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B' }}>7</p></div>
+          <div style={{ background: 'white', padding: '24px', borderRadius: '16px' }}><p style={{ color: '#8B5E3C', fontSize: '13px', marginBottom: '4px', fontWeight: '600' }}>Total Stock</p><p style={{ fontSize: '36px', fontWeight: 'bold', color: '#1F3D2B' }}>{products.reduce((s: number, p: any) => s + p.stock, 0)}</p></div>
         </div>
 
-        <div style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(31,61,43,0.06)', marginBottom: '32px' }}>
+        <div style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', marginBottom: '32px' }}>
           <div style={{ padding: '24px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1F3D2B' }}>All Products</h2>
-            <button onClick={() => { setShowAddForm(true); setEditingProduct(null); setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', rating: '4.5', image: '', description: '' }); }} style={{ background: '#C6A75E', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', fontSize: '14px' }}>+ Add Product</button>
+            <button onClick={() => { setShowAddForm(true); setEditingProduct(null); setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', image: '' }); }} style={{ background: '#C6A75E', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', fontSize: '14px' }}>+ Add Product</button>
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -94,13 +98,8 @@ export default function AdminDashboard() {
                   <td style={{ padding: '16px 24px', fontSize: '13px', color: '#8B5E3C', textTransform: 'capitalize' }}>{product.category}</td>
                   <td style={{ padding: '16px 24px', fontSize: '14px', fontWeight: 'bold', color: '#C6A75E' }}>R{product.price}</td>
                   <td style={{ padding: '16px 24px', fontSize: '14px', color: '#1F3D2B' }}>{product.stock}</td>
-                  <td style={{ padding: '16px 24px' }}>
-                    <button onClick={() => toggleActive(product.id)} style={{ padding: '6px 16px', borderRadius: '20px', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '12px', background: product.active ? '#dcfce7' : '#fee2e2', color: product.active ? '#166534' : '#991b1b' }}>{product.active ? 'Active' : 'Inactive'}</button>
-                  </td>
-                  <td style={{ padding: '16px 24px', textAlign: 'right' }}>
-                    <button onClick={() => openEdit(product)} style={{ color: '#C6A75E', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', marginRight: '12px', fontSize: '13px' }}>Edit</button>
-                    <button onClick={() => deleteProduct(product.id)} style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>Delete</button>
-                  </td>
+                  <td style={{ padding: '16px 24px' }}><button onClick={() => toggleActive(product.id)} style={{ padding: '6px 16px', borderRadius: '20px', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '12px', background: product.active ? '#dcfce7' : '#fee2e2', color: product.active ? '#166534' : '#991b1b' }}>{product.active ? 'Active' : 'Inactive'}</button></td>
+                  <td style={{ padding: '16px 24px', textAlign: 'right' }}><button onClick={() => openEdit(product)} style={{ color: '#C6A75E', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', marginRight: '12px', fontSize: '13px' }}>Edit</button><button onClick={() => deleteProduct(product.id)} style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
@@ -108,17 +107,17 @@ export default function AdminDashboard() {
         </div>
 
         {(showAddForm || editingProduct) && (
-          <div style={{ background: 'white', borderRadius: '16px', padding: '32px', boxShadow: '0 2px 8px rgba(31,61,43,0.06)', marginBottom: '32px' }}>
+          <div style={{ background: 'white', borderRadius: '16px', padding: '32px', marginBottom: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1F3D2B', marginBottom: '24px' }}>{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
             <form onSubmit={handleSave} style={{ display: 'grid', gap: '20px' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#1F3D2B', fontSize: '13px' }}>Product Name *</label>
-                <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Product name" required style={{ width: '100%', padding: '12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '15px', color: '#1F3D2B' }} />
+                <label style={labelStyle}>Product Name *</label>
+                <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Product name" required style={inputStyle} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#1F3D2B', fontSize: '13px' }}>Category *</label>
-                  <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} style={{ width: '100%', padding: '12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '15px' }}>
+                  <label style={labelStyle}>Category *</label>
+                  <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} style={inputStyle}>
                     <option value="skincare">Skincare</option>
                     <option value="haircare">Haircare</option>
                     <option value="makeup">Makeup</option>
@@ -129,23 +128,24 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#1F3D2B', fontSize: '13px' }}>Stock *</label>
-                  <input type="number" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} placeholder="50" required style={{ width: '100%', padding: '12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '15px', color: '#1F3D2B' }} />
+                  <label style={labelStyle}>Stock *</label>
+                  <input type="number" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} placeholder="50" required style={inputStyle} />
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#1F3D2B', fontSize: '13px' }}>Price (R) *</label>
-                  <input type="number" step="0.01" value={form.price} onChange={e => setForm({...form, price: e.target.value})} placeholder="380" required style={{ width: '100%', padding: '12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '15px', color: '#1F3D2B' }} />
+                  <label style={labelStyle}>Price (R) *</label>
+                  <input type="number" step="0.01" value={form.price} onChange={e => setForm({...form, price: e.target.value})} placeholder="380" required style={inputStyle} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#1F3D2B', fontSize: '13px' }}>Compare at Price (R)</label>
-                  <input type="number" step="0.01" value={form.oldPrice} onChange={e => setForm({...form, oldPrice: e.target.value})} placeholder="450" style={{ width: '100%', padding: '12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '15px', color: '#1F3D2B' }} />
+                  <label style={labelStyle}>Compare at Price (R)</label>
+                  <input type="number" step="0.01" value={form.oldPrice} onChange={e => setForm({...form, oldPrice: e.target.value})} placeholder="450" style={inputStyle} />
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#1F3D2B', fontSize: '13px' }}>Image URL</label>
-                <input type="text" value={form.image} onChange={e => setForm({...form, image: e.target.value})} placeholder="https://images.unsplash.com/photo-..." style={{ width: '100%', padding: '12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '15px', color: '#1F3D2B' }} />
+                <label style={labelStyle}>Image URL</label>
+                <input type="text" value={form.image} onChange={e => setForm({...form, image: e.target.value})} placeholder="https://images.unsplash.com/photo-..." style={inputStyle} />
+                <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>Paste an image URL or use a photo from unsplash.com</p>
               </div>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <button type="button" onClick={() => { setShowAddForm(false); setEditingProduct(null); }} style={{ flex: 1, padding: '14px', border: '2px solid #1F3D2B', background: 'white', color: '#1F3D2B', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Cancel</button>
