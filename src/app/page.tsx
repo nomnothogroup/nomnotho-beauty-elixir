@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '@/lib/cart-context';
 
 export default function HomePage() {
-  const { dispatch } = useCart();
+  const { dispatch, state } = useCart();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [addedMsg, setAddedMsg] = useState('');
 
@@ -20,38 +20,33 @@ export default function HomePage() {
   ];
 
   const featuredProducts = [
-    { id: 1, name: 'Marula Deep Hydration Oil', price: 380, rating: 4.9, reviews: 312, quantity: 1, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
-    { id: 2, name: 'Shea Luxe Body Butter', price: 229, rating: 4.8, reviews: 312, quantity: 1, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
-    { id: 3, name: 'Imbali Spot Dots', price: 150, rating: 4.7, reviews: 234, quantity: 1, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
-    { id: 4, name: 'Rooibos Repair Night Creme', price: 295, rating: 4.8, reviews: 203, quantity: 1, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
-    { id: 5, name: 'Rooibos Antioxidant Mist', price: 175, rating: 4.6, reviews: 203, quantity: 1, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
-    { id: 6, name: 'Selina Daily Shield SPF40', price: 310, rating: 4.7, reviews: 198, quantity: 1, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
-    { id: 7, name: 'Niacinamide Pore Serum', price: 285, rating: 4.5, reviews: 176, quantity: 1, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
-    { id: 8, name: 'Moringa Brightening Cleanser', price: 220, rating: 4.6, reviews: 167, quantity: 1, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' }
+    { id: 101, name: 'Marula Deep Hydration Oil', price: 380, rating: 4.9, reviews: 312, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
+    { id: 102, name: 'Shea Luxe Body Butter', price: 229, rating: 4.8, reviews: 312, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
+    { id: 103, name: 'Imbali Spot Dots', price: 150, rating: 4.7, reviews: 234, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' },
+    { id: 104, name: 'Rooibos Repair Night Creme', price: 295, rating: 4.8, reviews: 203, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
+    { id: 105, name: 'Rooibos Antioxidant Mist', price: 175, rating: 4.6, reviews: 203, image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop' },
+    { id: 106, name: 'Selina Daily Shield SPF40', price: 310, rating: 4.7, reviews: 198, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop' },
+    { id: 107, name: 'Niacinamide Pore Serum', price: 285, rating: 4.5, reviews: 176, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop' },
+    { id: 108, name: 'Moringa Brightening Cleanser', price: 220, rating: 4.6, reviews: 167, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop' }
   ];
 
   const ingredients = [
-    { name: 'Rooibos', location: 'Western Cape' }, { name: 'Marula', location: 'Limpopo' }, { name: 'Baobab', location: 'Central Africa' }, { name: 'Buchu', location: 'Cape Region' },
-    { name: 'Aloe Ferox', location: 'Eastern Cape' }, { name: 'Kalahari Melon', location: 'Kalahari' }, { name: 'African Black Soap', location: 'West Africa' }, { name: 'Mongongo', location: 'Southern Africa' }
+    { name: 'Rooibos', location: 'Western Cape' }, { name: 'Marula', location: 'Limpopo' }, { name: 'Baobab', location: 'Central Africa' },
+    { name: 'Buchu', location: 'Cape Region' }, { name: 'Aloe Ferox', location: 'Eastern Cape' }, { name: 'Kalahari Melon', location: 'Kalahari' },
+    { name: 'African Black Soap', location: 'West Africa' }, { name: 'Mongongo', location: 'Southern Africa' }
   ];
 
-  const addToCart = (p: any) => {
+  const addToCartHandler = (p: any) => {
     dispatch({ type: 'ADD_ITEM', payload: { id: p.id, name: p.name, price: p.price, quantity: 1, image: p.image } });
     setAddedMsg(p.name + ' added!');
     setTimeout(() => setAddedMsg(''), 2000);
   };
 
-  const buyNow = (p: any) => {
-    dispatch({ type: 'ADD_ITEM', payload: { id: p.id, name: p.name, price: p.price, quantity: 1, image: p.image } });
-  };
-
   const renderStars = (r: number) => { let s = ''; for (let i = 1; i <= 5; i++) s += i <= Math.floor(r) ? '\u2605' : '\u2606'; return s; };
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % 6);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + 6) % 6);
 
   return React.createElement('div', { style: { background: '#F5F1E8' } },
     addedMsg && React.createElement('div', { style: { position: 'fixed', top: '80px', right: '20px', background: '#1F3D2B', color: '#C6A75E', padding: '12px 24px', borderRadius: '8px', zIndex: 100, fontWeight: 'bold' } }, addedMsg),
-
+    // Hero Slider (same)
     React.createElement('section', { style: { position: 'relative', height: '80vh', minHeight: '500px', overflow: 'hidden' } },
       slides.map((slide, index) =>
         React.createElement('div', { key: index, style: { position: 'absolute', inset: 0, opacity: index === currentSlide ? 1 : 0, transition: 'opacity 0.8s ease-in-out', backgroundImage: 'linear-gradient(rgba(31,61,43,0.7), rgba(31,61,43,0.4)), url(' + slide.image + ')', backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
@@ -62,13 +57,10 @@ export default function HomePage() {
           )
         )
       ),
-      React.createElement('button', { onClick: prevSlide, style: { position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer', fontSize: '24px' } }, '<'),
-      React.createElement('button', { onClick: nextSlide, style: { position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer', fontSize: '24px' } }, '>'),
-      React.createElement('div', { style: { position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '12px' } },
-        slides.map((_, i) => React.createElement('button', { key: i, onClick: () => setCurrentSlide(i), style: { width: i === currentSlide ? '32px' : '12px', height: '12px', borderRadius: '6px', border: 'none', background: i === currentSlide ? '#C6A75E' : 'rgba(255,255,255,0.5)', cursor: 'pointer' } }))
-      )
+      React.createElement('button', { onClick: () => setCurrentSlide((prev) => (prev - 1 + 6) % 6), style: { position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer', fontSize: '24px' } }, '<'),
+      React.createElement('button', { onClick: () => setCurrentSlide((prev) => (prev + 1) % 6), style: { position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer', fontSize: '24px' } }, '>')
     ),
-
+    // Featured Products
     React.createElement('section', { style: { padding: '80px 0', background: 'white' } },
       React.createElement('div', { className: 'max-w-7xl mx-auto px-4' },
         React.createElement('h2', { style: { fontSize: '32px', fontWeight: 'bold', color: '#1F3D2B', textAlign: 'center' } }, 'Featured Products'),
@@ -82,8 +74,8 @@ export default function HomePage() {
                 React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' } },
                   React.createElement('span', { style: { fontSize: '18px', fontWeight: 'bold', color: '#1F3D2B' } }, 'R' + p.price),
                   React.createElement('div', { style: { display: 'flex', gap: '6px' } },
-                    React.createElement('button', { onClick: () => addToCart(p), style: { background: '#1F3D2B', color: '#F5F1E8', border: 'none', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '11px' } }, 'Add to Cart'),
-                    React.createElement(Link, { href: '/checkout', onClick: () => buyNow(p), style: { background: '#C6A75E', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '11px', textDecoration: 'none', textAlign: 'center' } }, 'Buy Now')
+                    React.createElement('button', { onClick: () => addToCartHandler(p), style: { background: '#1F3D2B', color: '#F5F1E8', border: 'none', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '11px' } }, 'Add to Cart'),
+                    React.createElement(Link, { href: '/cart', onClick: () => addToCartHandler(p), style: { background: '#C6A75E', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '11px', textDecoration: 'none' } }, 'Buy Now')
                   )
                 )
               )
@@ -92,7 +84,7 @@ export default function HomePage() {
         )
       )
     ),
-
+    // Our Story, Heritage, CTA sections remain same...
     React.createElement('section', { style: { padding: '80px 0', background: '#F5F1E8' } },
       React.createElement('div', { className: 'max-w-6xl mx-auto px-4' },
         React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' } },
@@ -109,7 +101,6 @@ export default function HomePage() {
         )
       )
     ),
-
     React.createElement('section', { style: { padding: '80px 0', background: 'white' } },
       React.createElement('div', { className: 'max-w-6xl mx-auto px-4' },
         React.createElement('h2', { style: { fontSize: '32px', fontWeight: 'bold', color: '#1F3D2B', textAlign: 'center' } }, 'Our Heritage'),
@@ -124,7 +115,6 @@ export default function HomePage() {
         )
       )
     ),
-
     React.createElement('section', { style: { background: 'linear-gradient(to right, #1F3D2B, #2d5a3f)', padding: '80px 0', textAlign: 'center' } },
       React.createElement('h2', { style: { fontSize: '32px', fontWeight: 'bold', color: '#F5F1E8' } }, 'Ready to Transform Your Beauty Routine?'),
       React.createElement('p', { style: { color: '#C6A75E', fontSize: '18px', marginBottom: '32px' } }, 'Experience the power of African botanicals'),
