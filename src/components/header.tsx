@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
 
@@ -25,7 +25,7 @@ export default function Header() {
               <Link href='/about' style={{ color: '#1F3D2B', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>About</Link>
               <Link href='/contact' style={{ color: '#1F3D2B', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>Contact</Link>
             </nav>
-            <Link href='/cart' style={{ background: '#C6A75E', color: 'white', padding: '10px 20px', borderRadius: '25px', textDecoration: 'none', fontSize: '13px', fontWeight: 'bold', position: 'relative' }}>
+            <Link href='/account' style={{ color: '#1F3D2B', textDecoration: 'none', fontSize: '13px', fontWeight: '600', marginRight: '12px' }}>Account</Link> style={{ background: '#C6A75E', color: 'white', padding: '10px 20px', borderRadius: '25px', textDecoration: 'none', fontSize: '13px', fontWeight: 'bold', position: 'relative' }}>
               Cart
               {totalItems > 0 && (
                 <span style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#1F3D2B', color: '#C6A75E', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold' }}>
@@ -39,3 +39,5 @@ export default function Header() {
     </header>
   );
 }
+
+
