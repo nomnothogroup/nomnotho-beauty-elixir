@@ -16,8 +16,6 @@ export default function CheckoutPage() {
   const delivery = 99;
   const discount = subtotal * 0.10;
   const total = subtotal - discount + delivery;
-  const yocoApiKey = 'pk_live_002aad46P4dbMdVb5e14';
-
   const bankQRValue = 'bank:standardbank|acc:251443574|name:Nomnotho+Group+of+Companies|branch:051001|ref:' + orderNumber + '|amount:' + total.toFixed(2);
 
   const sendWhatsApp = () => {
@@ -26,11 +24,15 @@ export default function CheckoutPage() {
   };
 
   const handlePlaceOrder = () => {
-    if (paymentMethod === 'paypal') window.open('https://paypal.me/godfreysiwela/' + total.toFixed(2), '_blank');
-    if (paymentMethod === 'yoco') window.open('https://pay.yoco.com/?amount=' + (total * 100) + '&reference=' + orderNumber, '_blank');
+    if (paymentMethod === 'paypal') {
+      window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=godfreysiwela@gmail.com&amount=' + total.toFixed(2) + '&currency_code=ZAR&item_name=Nomnotho+Order+' + orderNumber, '_blank');
+    }
+    if (paymentMethod === 'yoco') {
+      window.open('https://pay.yoco.com/?amount=' + Math.round(total * 100) + '&currency=ZAR&reference=' + orderNumber, '_blank');
+    }
     sendWhatsApp();
     dispatch({ type: 'CLEAR_CART' });
-    window.location.href = '/thank-you?ref=' + orderNumber;
+    window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
   };
 
   if (state.items.length === 0) {
@@ -77,32 +79,35 @@ export default function CheckoutPage() {
               React.createElement('div', { className: 'w-12 h-12 bg-[#1F3D2B] rounded-xl flex items-center justify-center text-white font-bold text-lg' }, 'Y'),
               React.createElement('div', null,
                 React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Yoco Card Payment'),
-                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Pay with debit/credit card via Yoco secure gateway')
+                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Pay securely with debit or credit card via Yoco')
               ),
               paymentMethod === 'yoco' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
             )
           ),
-          paymentMethod === 'yoco' && React.createElement('div', { className: 'mt-4 p-5 bg-[#F5F1E8] rounded-xl text-center' },
-            React.createElement('p', { className: 'text-gray-900 font-semibold mb-2' }, 'You will be redirected to Yoco secure payment gateway'),
-            React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Amount: R' + total.toFixed(2)),
-            React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Reference: ' + orderNumber)
+          paymentMethod === 'yoco' && React.createElement('div', { className: 'mt-4 p-4 bg-[#F5F1E8] rounded-xl text-center' },
+            React.createElement('p', { className: 'text-gray-900 font-semibold' }, 'You will be redirected to the Yoco secure payment page'),
+            React.createElement('p', { className: 'text-gray-600 text-sm mt-1' }, 'Amount: R' + total.toFixed(2) + ' | Ref: ' + orderNumber)
           ),
           React.createElement('div', { onClick: () => setPaymentMethod('paypal'), className: 'p-5 border-2 rounded-xl cursor-pointer ' + (paymentMethod === 'paypal' ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
             React.createElement('div', { className: 'flex items-center gap-4' },
               React.createElement('div', { className: 'w-12 h-12 bg-[#0070BA] rounded-xl flex items-center justify-center text-white font-bold text-lg' }, 'P'),
               React.createElement('div', null,
                 React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'PayPal'),
-                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'paypal.me/godfreysiwela')
+                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Pay with PayPal balance or card via godfreysiwela@gmail.com')
               ),
               paymentMethod === 'paypal' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
             )
+          ),
+          paymentMethod === 'paypal' && React.createElement('div', { className: 'mt-4 p-4 bg-[#F5F1E8] rounded-xl text-center' },
+            React.createElement('p', { className: 'text-gray-900 font-semibold' }, 'You will be redirected to PayPal to complete payment'),
+            React.createElement('p', { className: 'text-gray-600 text-sm mt-1' }, 'Amount: R' + total.toFixed(2))
           ),
           React.createElement('div', { onClick: () => setPaymentMethod('bank'), className: 'p-5 border-2 rounded-xl cursor-pointer ' + (paymentMethod === 'bank' ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
             React.createElement('div', { className: 'flex items-center gap-4' },
               React.createElement('div', { className: 'w-12 h-12 bg-[#0033A0] rounded-xl flex items-center justify-center text-white font-bold text-sm' }, 'SB'),
               React.createElement('div', null,
-                React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Standard Bank EFT + QR Code'),
-                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Account: 251443574')
+                React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Standard Bank EFT / QR Code'),
+                React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Direct bank transfer with QR code')
               ),
               paymentMethod === 'bank' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
             )
@@ -114,7 +119,7 @@ export default function CheckoutPage() {
                 React.createElement(QRCodeSVG, { value: bankQRValue, size: 160, level: 'H', fgColor: '#1F3D2B' })
               )
             ),
-            React.createElement('p', { className: 'text-center text-sm text-gray-600 mb-4' }, 'Scan with any South African banking app'),
+            React.createElement('p', { className: 'text-center text-sm text-gray-600 mb-4' }, 'Scan with any SA banking app or use details below'),
             React.createElement('div', { className: 'grid grid-cols-2 gap-3 text-gray-900 bg-white p-4 rounded-lg' },
               React.createElement('div', null, React.createElement('strong', null, 'Bank:'), ' Standard Bank'),
               React.createElement('div', null, React.createElement('strong', null, 'Account:'), ' 251443574'),
