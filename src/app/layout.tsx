@@ -18,45 +18,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="min-h-screen">{children}</main>
           <Footer />
           <a
-            href="https://wa.me/27761286545?text=Hi%20Nomnotho%20Beauty%20Studio,%20I%20need%20help%20with..."
+            href="https://wa.me/27761286545?text=Hi%20Nomnotho%20Beauty%20Studio%2C%20I%20need%20help%20with..."
             target="_blank"
             rel="noopener noreferrer"
             style={{
               position: 'fixed',
               bottom: '24px',
               right: '24px',
-              width: '60px',
-              height: '60px',
-              borderRadius: '50%',
               background: '#25D366',
+              color: 'white',
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '28px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              zIndex: 1000,
-              textDecoration: 'none',
-              animation: 'pulse 2s infinite'
+              boxShadow: '0 4px 16px rgba(37,211,102,0.4)',
+              zIndex: 999,
+              textDecoration: 'none'
             }}
           >
-            💬
+            
           </a>
-          <style jsx global>{`
-            @keyframes pulse {
-              0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-              }
-              50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
-              }
-              100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-              }
-            }
-          `}</style>
         </CartProvider>
       </body>
     </html>
