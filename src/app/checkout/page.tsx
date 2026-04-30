@@ -14,7 +14,6 @@ export default function CheckoutPage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [paid, setPaid] = useState(false);
-  const [showCardForm, setShowCardForm] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -25,37 +24,21 @@ export default function CheckoutPage() {
     setOrderNumber('NOM-' + Date.now().toString(36).toUpperCase());
   }, []);
 
-  const delivery = 99;
+  const delivery = subtotal >= 1000 ? 0 : 99;
   const discount = subtotal * 0.10;
   const total = subtotal - discount + delivery;
   const bankQRValue = 'bank:standardbank|acc:251443574|name:Nomnotho+Group+of+Companies|branch:051001|ref:' + orderNumber + '|amount:' + total.toFixed(2);
 
   const sendWhatsApp = () => {
     const itemsList = state.items.map(i => i.name + ' x' + i.quantity).join(', ');
-    window.open('https://wa.me/27761286545?text=' + encodeURIComponent('Order: ' + orderNumber + ' | Customer: ' + form.firstName + ' | Total: R' + total.toFixed(2) + ' | Items: ' + itemsList), '_blank');
+    window.open('https://wa.me/27761286545?text=' + encodeURIComponent('Order: ' + orderNumber + ' | Total: R' + total.toFixed(2) + ' | Items: ' + itemsList), '_blank');
   };
 
   const handlePlaceOrder = () => {
-    if (!paid) {
-      alert('Please complete payment first before placing your order.');
-      return;
-    }
+    if (!paid) { alert('Please complete payment first.'); return; }
     sendWhatsApp();
     dispatch({ type: 'CLEAR_CART' });
     window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
-  };
-
-  const handlePayment = () => {
-    if (paymentMethod === 'paypal') {
-      window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=godfreysiwela@gmail.com&amount=' + total.toFixed(2) + '&currency_code=ZAR&item_name=Nomnotho+Order+' + orderNumber, '_blank');
-      setPaid(true);
-      alert('Please complete your payment on PayPal. Once done, click Place Order.');
-    } else if (paymentMethod === 'yoco') {
-      setShowCardForm(true);
-    } else if (paymentMethod === 'bank') {
-      setPaid(true);
-      alert('Please use the banking details below to make your EFT payment. Send proof of payment to WhatsApp 0761286545. Then click Place Order.');
-    }
   };
 
   if (loading) return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' }, React.createElement('p', { className: 'text-gray-900' }, 'Loading...'));
@@ -65,7 +48,6 @@ export default function CheckoutPage() {
       React.createElement('div', { className: 'text-center bg-white p-12 rounded-2xl shadow-lg max-w-md' },
         React.createElement('span', { className: 'text-6xl mb-4 block' }, '\uD83D\uDD12'),
         React.createElement('h1', { className: 'text-2xl font-bold text-[#1F3D2B] mb-4' }, 'Login Required'),
-        React.createElement('p', { className: 'text-gray-600 mb-6' }, 'Please login before checkout.'),
         React.createElement(Link, { href: '/account', className: 'inline-block bg-[#C6A75E] text-white px-8 py-3 rounded-full font-bold text-lg' }, 'Login / Sign Up')
       )
     );
@@ -76,6 +58,7 @@ export default function CheckoutPage() {
       React.createElement('div', { className: 'text-center bg-white p-12 rounded-2xl shadow-lg max-w-md' },
         React.createElement('span', { className: 'text-6xl mb-4 block' }, '\uD83D\uDED2'),
         React.createElement('h1', { className: 'text-2xl font-bold text-[#1F3D2B] mb-4' }, 'Your cart is empty'),
+        React.createElement('p', { className: 'text-gray-600 mb-2' }, 'Items added via Buy Now should appear here.'),
         React.createElement(Link, { href: '/shop', className: 'inline-block bg-[#C6A75E] text-white px-8 py-3 rounded-full font-semibold' }, 'Continue Shopping')
       )
     );
@@ -92,7 +75,6 @@ export default function CheckoutPage() {
           React.createElement('div', { key: label, className: 'px-6 py-2 rounded-full text-sm font-semibold ' + (step >= i+1 ? 'bg-[#1F3D2B] text-[#C6A75E]' : 'bg-gray-200 text-gray-500') }, (i+1) + '. ' + label)
         )
       ),
-
       step === 1 && React.createElement('div', { className: 'bg-white rounded-2xl p-8 shadow-lg' },
         React.createElement('h2', { className: 'text-2xl font-bold text-[#1F3D2B] mb-6' }, 'Shipping Information'),
         React.createElement('div', { className: 'grid grid-cols-2 gap-4' },
@@ -104,86 +86,56 @@ export default function CheckoutPage() {
           React.createElement('input', { placeholder: 'City', className: 'border-2 border-gray-300 p-3 rounded-xl text-gray-900 bg-white', onChange: (e: any) => setForm({...form, city: e.target.value}) }),
           React.createElement('input', { placeholder: 'Province', className: 'border-2 border-gray-300 p-3 rounded-xl text-gray-900 bg-white', onChange: (e: any) => setForm({...form, province: e.target.value}) })
         ),
-        React.createElement('button', { onClick: () => setStep(2), className: 'mt-8 w-full bg-[#1F3D2B] text-[#C6A75E] py-4 rounded-xl font-bold text-lg' }, 'Continue to Payment')
+        delivery === 0 && React.createElement('div', { className: 'mt-4 bg-green-100 border-2 border-green-500 rounded-xl p-3 text-center' },
+          React.createElement('p', { className: 'text-green-800 font-bold' }, '\uD83C\uDF89 Free Delivery! Your order is over R1000')
+        ),
+        delivery > 0 && React.createElement('div', { className: 'mt-4 bg-[#FFFDF5] border-2 border-[#C6A75E] rounded-xl p-3 text-center' },
+          React.createElement('p', { className: 'text-[#1F3D2B] font-semibold' }, 'Delivery: R' + delivery),
+          React.createElement('p', { className: 'text-sm text-gray-600' }, 'Add R' + (1000 - subtotal).toFixed(2) + ' more for FREE delivery!')
+        ),
+        React.createElement('button', { onClick: () => setStep(2), className: 'mt-6 w-full bg-[#1F3D2B] text-[#C6A75E] py-4 rounded-xl font-bold text-lg' }, 'Continue to Payment')
       ),
 
       step === 2 && React.createElement('div', { className: 'bg-white rounded-2xl p-8 shadow-lg' },
-        React.createElement('h2', { className: 'text-2xl font-bold text-[#1F3D2B] mb-4' }, 'Select Payment Method'),
-        React.createElement('p', { className: 'text-sm text-red-600 mb-4 font-semibold' }, '\u26A0\uFE0F Payment is required before order can be placed'),
-        
-        React.createElement('div', { onClick: () => setPaymentMethod('yoco'), className: 'p-5 border-2 rounded-xl cursor-pointer mb-3 ' + (paymentMethod === 'yoco' ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
-          React.createElement('div', { className: 'flex items-center gap-4' },
-            React.createElement('div', { className: 'w-12 h-12 bg-[#1F3D2B] rounded-xl flex items-center justify-center text-white font-bold text-lg' }, 'Y'),
-            React.createElement('div', null,
-              React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Pay with Card (Yoco)'),
-              React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Enter card details securely')
-            ),
-            paymentMethod === 'yoco' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
+        React.createElement('h2', { className: 'text-2xl font-bold text-[#1F3D2B] mb-4' }, 'Payment Method'),
+        React.createElement('p', { className: 'text-sm text-red-600 mb-4 font-semibold' }, '\u26A0 Payment required before placing order'),
+        ['yoco', 'paypal', 'bank'].map(method =>
+          React.createElement('div', { key: method, onClick: () => setPaymentMethod(method), className: 'p-5 border-2 rounded-xl cursor-pointer mb-3 ' + (paymentMethod === method ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
+            React.createElement('div', { className: 'flex items-center gap-4' },
+              React.createElement('div', { className: 'w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg', style: { background: method === 'yoco' ? '#1F3D2B' : method === 'paypal' ? '#0070BA' : '#0033A0' } }, method === 'yoco' ? 'Y' : method === 'paypal' ? 'P' : 'SB'),
+              React.createElement('div', null,
+                React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, method === 'yoco' ? 'Yoco Card Payment' : method === 'paypal' ? 'PayPal' : 'Standard Bank EFT + QR'),
+                React.createElement('p', { className: 'text-gray-600 text-sm' }, method === 'yoco' ? 'Card details' : method === 'paypal' ? 'godfreysiwela@gmail.com' : 'Acc: 251443574')
+              ),
+              paymentMethod === method && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
+            )
           )
         ),
         paymentMethod === 'yoco' && React.createElement('div', { className: 'p-4 bg-[#F5F1E8] rounded-xl mb-3' },
-          React.createElement('h4', { className: 'font-bold text-gray-900 mb-3' }, 'Enter Card Details'),
-          React.createElement('div', { className: 'space-y-3' },
-            React.createElement('input', { type: 'text', placeholder: 'Card Number (e.g. 4242 4242 4242 4242)', className: 'w-full border-2 border-gray-300 p-3 rounded-xl bg-white text-gray-900' }),
-            React.createElement('div', { className: 'grid grid-cols-2 gap-3' },
-              React.createElement('input', { type: 'text', placeholder: 'MM/YY', className: 'border-2 border-gray-300 p-3 rounded-xl bg-white text-gray-900' }),
-              React.createElement('input', { type: 'text', placeholder: 'CVV', className: 'border-2 border-gray-300 p-3 rounded-xl bg-white text-gray-900' })
-            ),
-            React.createElement('button', { 
-              onClick: () => { setPaid(true); alert('Card payment processed! You can now place your order.'); },
-              className: 'w-full bg-[#C6A75E] text-white py-3 rounded-xl font-bold'
-            }, 'Pay R' + total.toFixed(2) + ' with Card')
-          )
-        ),
-
-        React.createElement('div', { onClick: () => setPaymentMethod('paypal'), className: 'p-5 border-2 rounded-xl cursor-pointer mb-3 ' + (paymentMethod === 'paypal' ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
-          React.createElement('div', { className: 'flex items-center gap-4' },
-            React.createElement('div', { className: 'w-12 h-12 bg-[#0070BA] rounded-xl flex items-center justify-center text-white font-bold text-lg' }, 'P'),
-            React.createElement('div', null,
-              React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'PayPal'),
-              React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Pay with PayPal balance or card')
-            ),
-            paymentMethod === 'paypal' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
-          )
+          React.createElement('input', { type: 'text', placeholder: 'Card Number', className: 'w-full border-2 border-gray-300 p-3 rounded-xl bg-white text-gray-900 mb-3' }),
+          React.createElement('div', { className: 'grid grid-cols-2 gap-3 mb-3' },
+            React.createElement('input', { type: 'text', placeholder: 'MM/YY', className: 'border-2 border-gray-300 p-3 rounded-xl bg-white text-gray-900' }),
+            React.createElement('input', { type: 'text', placeholder: 'CVV', className: 'border-2 border-gray-300 p-3 rounded-xl bg-white text-gray-900' })
+          ),
+          React.createElement('button', { onClick: () => { setPaid(true); alert('Payment processed!'); }, className: 'w-full bg-[#C6A75E] text-white py-3 rounded-xl font-bold' }, 'Pay R' + total.toFixed(2))
         ),
         paymentMethod === 'paypal' && React.createElement('div', { className: 'p-4 bg-[#F5F1E8] rounded-xl mb-3 text-center' },
-          React.createElement('p', { className: 'text-gray-900 font-semibold mb-2' }, 'Amount: R' + total.toFixed(2)),
-          React.createElement('button', {
-            onClick: () => { window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=godfreysiwela@gmail.com&amount=' + total.toFixed(2) + '&currency_code=ZAR&item_name=Nomnotho+Order+' + orderNumber, '_blank'); setPaid(true); alert('Complete your payment on PayPal, then return here and click Place Order.'); },
-            className: 'bg-[#0070BA] text-white py-3 px-6 rounded-xl font-bold'
-          }, 'Pay with PayPal')
-        ),
-
-        React.createElement('div', { onClick: () => setPaymentMethod('bank'), className: 'p-5 border-2 rounded-xl cursor-pointer mb-3 ' + (paymentMethod === 'bank' ? 'border-[#C6A75E] bg-[#FFFDF5]' : 'border-gray-200') },
-          React.createElement('div', { className: 'flex items-center gap-4' },
-            React.createElement('div', { className: 'w-12 h-12 bg-[#0033A0] rounded-xl flex items-center justify-center text-white font-bold' }, 'SB'),
-            React.createElement('div', null,
-              React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, 'Standard Bank EFT + QR'),
-              React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Direct bank transfer')
-            ),
-            paymentMethod === 'bank' && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
-          )
+          React.createElement('button', { onClick: () => { window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=godfreysiwela@gmail.com&amount=' + total.toFixed(2) + '&currency_code=ZAR', '_blank'); setPaid(true); }, className: 'bg-[#0070BA] text-white py-3 px-6 rounded-xl font-bold' }, 'Pay R' + total.toFixed(2) + ' via PayPal')
         ),
         paymentMethod === 'bank' && React.createElement('div', { className: 'p-4 bg-[#F5F1E8] rounded-xl mb-3 text-center' },
-          React.createElement('div', { className: 'bg-white p-4 rounded-xl inline-block mb-3' },
-            React.createElement(QRCodeSVG, { value: bankQRValue, size: 150, level: 'H', fgColor: '#1F3D2B' })
-          ),
-          React.createElement('div', { className: 'grid grid-cols-2 gap-2 text-left text-gray-900 text-sm' },
+          React.createElement(QRCodeSVG, { value: bankQRValue, size: 150, level: 'H', fgColor: '#1F3D2B' }),
+          React.createElement('div', { className: 'grid grid-cols-2 gap-2 text-left text-gray-900 text-sm mt-3' },
             React.createElement('div', null, React.createElement('strong', null, 'Bank:'), ' Standard Bank'),
-            React.createElement('div', null, React.createElement('strong', null, 'Account:'), ' 251443574'),
+            React.createElement('div', null, React.createElement('strong', null, 'Acc:'), ' 251443574'),
             React.createElement('div', null, React.createElement('strong', null, 'Name:'), ' Nomnotho Group'),
             React.createElement('div', null, React.createElement('strong', null, 'Branch:'), ' 051001'),
             React.createElement('div', { className: 'col-span-2' }, React.createElement('strong', null, 'Ref: '), orderNumber)
           ),
-          React.createElement('button', {
-            onClick: () => { setPaid(true); alert('Use the banking details above. Send proof of payment to WhatsApp 0761286545. Then click Place Order.'); },
-            className: 'mt-3 bg-[#C6A75E] text-white py-2 px-6 rounded-xl font-bold'
-          }, 'I Have Paid via EFT')
+          React.createElement('button', { onClick: () => { setPaid(true); alert('Send POP to WhatsApp 0761286545'); }, className: 'mt-3 bg-[#C6A75E] text-white py-2 px-6 rounded-xl font-bold' }, 'I Have Paid via EFT')
         ),
-
         React.createElement('div', { className: 'flex gap-4 mt-6' },
           React.createElement('button', { onClick: () => setStep(1), className: 'flex-1 bg-white border-2 border-[#1F3D2B] text-[#1F3D2B] py-3 rounded-xl font-bold' }, 'Back'),
-          React.createElement('button', { onClick: () => { if (!paymentMethod) { alert('Please select a payment method'); return; } handlePayment(); setStep(3); }, disabled: !paymentMethod, className: 'flex-1 py-3 rounded-xl font-bold ' + (paymentMethod ? 'bg-[#1F3D2B] text-[#C6A75E]' : 'bg-gray-300 text-gray-500') }, 'Review Order')
+          React.createElement('button', { onClick: () => { if (!paymentMethod) { alert('Select payment method'); return; } setStep(3); }, disabled: !paymentMethod, className: 'flex-1 py-3 rounded-xl font-bold ' + (paymentMethod ? 'bg-[#1F3D2B] text-[#C6A75E]' : 'bg-gray-300 text-gray-500') }, 'Review Order')
         )
       ),
 
@@ -198,14 +150,14 @@ export default function CheckoutPage() {
         React.createElement('div', { className: 'bg-[#F5F1E8] rounded-xl p-4 mt-4 text-gray-900' },
           React.createElement('div', { className: 'flex justify-between mb-2' }, React.createElement('span', null, 'Subtotal'), React.createElement('span', null, 'R' + subtotal.toFixed(2))),
           React.createElement('div', { className: 'flex justify-between mb-2 text-green-600 font-semibold' }, React.createElement('span', null, '10% Discount'), React.createElement('span', null, '-R' + discount.toFixed(2))),
-          React.createElement('div', { className: 'flex justify-between mb-2' }, React.createElement('span', null, 'Delivery'), React.createElement('span', null, 'R99')),
+          delivery === 0
+            ? React.createElement('div', { className: 'flex justify-between mb-2 text-green-600 font-bold' }, React.createElement('span', null, 'Delivery'), React.createElement('span', null, 'FREE'))
+            : React.createElement('div', { className: 'flex justify-between mb-2' }, React.createElement('span', null, 'Delivery'), React.createElement('span', null, 'R99')),
           React.createElement('div', { className: 'flex justify-between text-xl font-bold border-t-2 border-[#C6A75E] pt-2' }, React.createElement('span', null, 'Total'), React.createElement('span', null, 'R' + total.toFixed(2)))
         ),
-        paid ? React.createElement('div', { className: 'bg-green-100 border-2 border-green-500 rounded-xl p-3 text-center mt-4' },
-          React.createElement('p', { className: 'text-green-800 font-bold' }, '\u2705 Payment Confirmed')
-        ) : React.createElement('div', { className: 'bg-red-100 border-2 border-red-500 rounded-xl p-3 text-center mt-4' },
-          React.createElement('p', { className: 'text-red-800 font-bold' }, '\u26A0\uFE0F Payment required before placing order')
-        ),
+        paid
+          ? React.createElement('div', { className: 'bg-green-100 border-2 border-green-500 rounded-xl p-3 text-center mt-4' }, React.createElement('p', { className: 'text-green-800 font-bold' }, '\u2705 Payment Confirmed'))
+          : React.createElement('div', { className: 'bg-red-100 border-2 border-red-500 rounded-xl p-3 text-center mt-4' }, React.createElement('p', { className: 'text-red-800 font-bold' }, '\u26A0 Payment required')),
         React.createElement('div', { className: 'flex gap-4 mt-6' },
           React.createElement('button', { onClick: () => setStep(2), className: 'flex-1 bg-white border-2 border-[#1F3D2B] text-[#1F3D2B] py-3 rounded-xl font-bold' }, 'Back'),
           React.createElement('button', { onClick: handlePlaceOrder, disabled: !paid, className: 'flex-1 py-3 rounded-xl font-bold ' + (paid ? 'bg-[#C6A75E] text-white' : 'bg-gray-300 text-gray-500') }, 'Place Order')
