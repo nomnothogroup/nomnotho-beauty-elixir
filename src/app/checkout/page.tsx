@@ -13,7 +13,6 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState('');
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -34,26 +33,11 @@ export default function CheckoutPage() {
     window.open('https://wa.me/27761286545?text=' + encodeURIComponent('Order: ' + orderNumber + ' | Total: R' + total.toFixed(2) + ' | Items: ' + itemsList), '_blank');
   };
 
-  const handleYocoPayment = async () => {
-    setProcessing(true);
-    try {
-      const res = await fetch('/api/yoco', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: total, orderNumber })
-      });
-      const data = await res.json();
-      if (data.status === 'successful' || data.id) {
-        sendWhatsApp();
-        dispatch({ type: 'CLEAR_CART' });
-        window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
-      } else {
-        alert('Payment failed. Please try again or use another payment method.');
-      }
-    } catch {
-      alert('Payment error. Please try again.');
-    }
-    setProcessing(false);
+  const handlePayWithYoco = () => {
+    window.open('https://pay.yoco.com/nomnotho-group-of-companies?amount=' + (total * 100), '_blank');
+    sendWhatsApp();
+    dispatch({ type: 'CLEAR_CART' });
+    window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
   };
 
   const handlePlaceOrder = () => {
@@ -65,7 +49,7 @@ export default function CheckoutPage() {
     window.location.href = '/thank-you?ref=' + orderNumber + '&total=' + total.toFixed(2);
   };
 
-  if (loading) return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' }, React.createElement('p', null, 'Loading...'));
+  if (loading) return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' }, React.createElement('p', { className: 'text-gray-900' }, 'Loading...'));
 
   if (!user) {
     return React.createElement('div', { className: 'min-h-screen bg-[#F5F1E8] flex items-center justify-center' },
@@ -99,17 +83,12 @@ export default function CheckoutPage() {
       React.createElement('div', { className: 'mt-8' },
         step === 1 && React.createElement('div', { className: 'bg-white rounded-2xl p-8 shadow-lg' },
           React.createElement('h2', { className: 'text-2xl font-bold text-[#1F3D2B] mb-6' }, 'Shipping'),
-          React.createElement('div', { className: 'grid grid-cols-2 gap-4' },
-            ['First Name', 'Last Name'].map((ph, i) => React.createElement('input', { key: ph, placeholder: ph, value: i === 0 ? form.firstName : form.lastName, className: 'border-2 border-gray-300 p-3 rounded-xl text-gray-900 bg-white', onChange: (e: any) => setForm(prev => ({...prev, [i === 0 ? 'firstName' : 'lastName']: e.target.value})) })),
-            React.createElement('input', { placeholder: 'Email', value: form.email, className: 'border-2 border-gray-300 p-3 rounded-xl col-span-2 text-gray-900 bg-white', onChange: (e: any) => setForm(prev => ({...prev, email: e.target.value})) }),
-            React.createElement('input', { placeholder: 'Phone', className: 'border-2 border-gray-300 p-3 rounded-xl col-span-2 text-gray-900 bg-white', onChange: (e: any) => setForm(prev => ({...prev, phone: e.target.value})) }),
-            React.createElement('input', { placeholder: 'Address', className: 'border-2 border-gray-300 p-3 rounded-xl col-span-2 text-gray-900 bg-white', onChange: (e: any) => setForm(prev => ({...prev, address: e.target.value})) }),
-            React.createElement('input', { placeholder: 'City', className: 'border-2 border-gray-300 p-3 rounded-xl text-gray-900 bg-white', onChange: (e: any) => setForm(prev => ({...prev, city: e.target.value})) }),
-            React.createElement('input', { placeholder: 'Province', className: 'border-2 border-gray-300 p-3 rounded-xl text-gray-900 bg-white', onChange: (e: any) => setForm(prev => ({...prev, province: e.target.value})) })
+          ['First Name', 'Last Name', 'Email', 'Phone', 'Address', 'City', 'Province'].map(f =>
+            React.createElement('input', { key: f, placeholder: f, className: 'border-2 border-gray-300 p-3 rounded-xl text-gray-900 bg-white w-full mb-3', onChange: (e: any) => setForm(prev => ({...prev, [f.toLowerCase().replace(' ', '')]: e.target.value})) })
           ),
           delivery === 0
-            ? React.createElement('div', { className: 'mt-4 bg-green-100 border-2 border-green-500 rounded-xl p-3 text-center' }, React.createElement('p', { className: 'text-green-800 font-bold' }, '\uD83C\uDF89 Free Delivery!'))
-            : React.createElement('div', { className: 'mt-4 bg-[#FFFDF5] border-2 border-[#C6A75E] rounded-xl p-3 text-center' }, React.createElement('p', { className: 'font-semibold' }, 'Delivery: R99 | Add R' + (1000 - subtotal).toFixed(2) + ' for FREE delivery!')),
+            ? React.createElement('div', { className: 'mt-4 bg-green-100 border-2 border-green-500 rounded-xl p-3 text-center' }, React.createElement('p', { className: 'text-green-800 font-bold' }, ' Free Delivery!'))
+            : React.createElement('div', { className: 'mt-4 bg-[#FFFDF5] border-2 border-[#C6A75E] rounded-xl p-3 text-center' }, React.createElement('p', { className: 'font-semibold text-gray-900' }, 'Delivery: R99 | Add R' + (1000 - subtotal).toFixed(2) + ' for FREE delivery!')),
           React.createElement('button', { onClick: () => setStep(2), className: 'mt-6 w-full bg-[#1F3D2B] text-[#C6A75E] py-4 rounded-xl font-bold text-lg' }, 'Continue to Payment')
         ),
         step === 2 && React.createElement('div', { className: 'bg-white rounded-2xl p-8 shadow-lg' },
@@ -120,21 +99,20 @@ export default function CheckoutPage() {
                 React.createElement('div', { className: 'w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg', style: { background: method === 'yoco' ? '#1F3D2B' : method === 'paypal' ? '#0070BA' : '#0033A0' } }, method === 'yoco' ? 'Y' : method === 'paypal' ? 'P' : 'SB'),
                 React.createElement('div', null,
                   React.createElement('h3', { className: 'font-bold text-gray-900 text-lg' }, method === 'yoco' ? 'Yoco Card Payment' : method === 'paypal' ? 'PayPal' : 'Standard Bank EFT'),
-                  React.createElement('p', { className: 'text-gray-600 text-sm' }, method === 'yoco' ? 'Secure card payment via Yoco' : method === 'paypal' ? 'godfreysiwela@gmail.com' : 'Acc: 251443574')
+                  React.createElement('p', { className: 'text-gray-600 text-sm' }, method === 'yoco' ? 'Pay securely with card via Yoco' : method === 'paypal' ? 'godfreysiwela@gmail.com' : 'Acc: 251443574')
                 ),
-                paymentMethod === method && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '\u2713')
+                paymentMethod === method && React.createElement('span', { className: 'ml-auto text-green-500 text-2xl font-bold' }, '')
               )
             )
           ),
-          paymentMethod === 'bank' && React.createElement('div', { className: 'p-5 bg-[#F5F1E8] rounded-xl mt-4' },
+          paymentMethod === 'bank' && React.createElement('div', { className: 'p-5 bg-[#F5F1E8] rounded-xl mt-4 text-center' },
             React.createElement(QRCodeSVG, { value: bankQRValue, size: 150, level: 'H', fgColor: '#1F3D2B' }),
-            React.createElement('div', { className: 'grid grid-cols-2 gap-2 mt-3 text-sm text-gray-900' },
+            React.createElement('div', { className: 'grid grid-cols-2 gap-2 mt-3 text-sm text-gray-900 text-left' },
               React.createElement('div', null, React.createElement('strong', null, 'Bank:'), ' Standard Bank'),
               React.createElement('div', null, React.createElement('strong', null, 'Acc:'), ' 251443574'),
               React.createElement('div', null, React.createElement('strong', null, 'Name:'), ' Nomnotho Group'),
               React.createElement('div', { className: 'col-span-2' }, React.createElement('strong', null, 'Ref: '), orderNumber)
-            ),
-            React.createElement('p', { className: 'text-sm text-gray-600 mt-3' }, 'Send POP to info@nomnothobeautystudio.co.za')
+            )
           ),
           React.createElement('div', { className: 'flex gap-4 mt-6' },
             React.createElement('button', { onClick: () => setStep(1), className: 'flex-1 bg-white border-2 border-[#1F3D2B] text-[#1F3D2B] py-3 rounded-xl font-bold' }, 'Back'),
@@ -150,15 +128,18 @@ export default function CheckoutPage() {
             )
           ),
           React.createElement('div', { className: 'bg-[#F5F1E8] rounded-xl p-4 mt-4 text-gray-900' },
-            React.createElement('div', { className: 'flex justify-between mb-2' }, React.createElement('span', null, 'Subtotal'), React.createElement('span', null, 'R' + subtotal.toFixed(2))),
-            React.createElement('div', { className: 'flex justify-between mb-2 text-green-600 font-semibold' }, React.createElement('span', null, '10% Discount'), React.createElement('span', null, '-R' + discount.toFixed(2))),
-            React.createElement('div', { className: 'flex justify-between mb-2' }, React.createElement('span', null, 'Delivery'), React.createElement('span', null, delivery === 0 ? 'FREE' : 'R99')),
-            React.createElement('div', { className: 'flex justify-between text-xl font-bold border-t-2 border-[#C6A75E] pt-2' }, React.createElement('span', null, 'Total'), React.createElement('span', null, 'R' + total.toFixed(2)))
+            ['Subtotal', '10% Discount', 'Delivery', 'Total'].map((label, i) => {
+              const values = [subtotal.toFixed(2), '-' + discount.toFixed(2), delivery === 0 ? 'FREE' : 'R99', total.toFixed(2)];
+              const isBold = i === 3;
+              return React.createElement('div', { key: label, className: 'flex justify-between mb-2 ' + (i === 1 ? 'text-green-600 font-semibold' : '') + (isBold ? ' text-xl font-bold border-t-2 border-[#C6A75E] pt-2' : '') },
+                React.createElement('span', null, label), React.createElement('span', null, 'R' + values[i])
+              );
+            })
           ),
           React.createElement('div', { className: 'flex gap-4 mt-6' },
             React.createElement('button', { onClick: () => setStep(2), className: 'flex-1 bg-white border-2 border-[#1F3D2B] text-[#1F3D2B] py-3 rounded-xl font-bold' }, 'Back'),
             paymentMethod === 'yoco'
-              ? React.createElement('button', { onClick: handleYocoPayment, disabled: processing, className: 'flex-1 py-3 rounded-xl font-bold bg-[#C6A75E] text-white' }, processing ? 'Processing...' : 'Pay R' + total.toFixed(2) + ' with Yoco')
+              ? React.createElement('button', { onClick: handlePayWithYoco, className: 'flex-1 py-3 rounded-xl font-bold bg-[#C6A75E] text-white' }, 'Pay R' + total.toFixed(2) + ' via Yoco')
               : React.createElement('button', { onClick: handlePlaceOrder, className: 'flex-1 py-3 rounded-xl font-bold bg-[#C6A75E] text-white' }, 'Place Order')
           )
         )
