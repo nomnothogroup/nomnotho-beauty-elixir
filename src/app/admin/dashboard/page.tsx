@@ -12,7 +12,11 @@ export default function AdminDashboard() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [activeTab, setActiveTab] = useState('products');
-  const [form, setForm] = useState({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', image: '', images: [] as string[] });
+  const [form, setForm] = useState({
+    name: '', category: 'skincare', price: '', oldPrice: '', stock: '',
+    description: '', product_size: '', size_unit: 'ml',
+    image: '', images: [] as string[]
+  });
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
 
@@ -85,6 +89,8 @@ export default function AdminDashboard() {
     setForm({
       name: product.name, category: product.category, price: product.price?.toString() || '',
       oldPrice: product.oldprice?.toString() || '', stock: product.stock?.toString() || '0',
+      description: product.description || '', product_size: product.product_size || '',
+      size_unit: product.size_unit || 'ml',
       image: product.image || '', images: product.images || []
     });
     setShowAddForm(false);
@@ -96,6 +102,7 @@ export default function AdminDashboard() {
       name: form.name, category: form.category, price: parseFloat(form.price) || 0,
       oldprice: form.oldPrice ? parseFloat(form.oldPrice) : null,
       stock: parseInt(form.stock) || 0,
+      description: form.description, product_size: form.product_size, size_unit: form.size_unit,
       image: form.image || 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=400&h=400&fit=crop',
       images: form.images
     };
@@ -106,7 +113,7 @@ export default function AdminDashboard() {
       await supabase.from('products').insert([{ ...productData, id: Date.now() }]);
     }
     setEditingProduct(null); setShowAddForm(false);
-    setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', image: '', images: [] });
+    setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', description: '', product_size: '', size_unit: 'ml', image: '', images: [] });
     fetchData();
   };
 
@@ -160,18 +167,22 @@ export default function AdminDashboard() {
         React.createElement('div', { style: { background: 'white', borderRadius: '16px', overflow: 'hidden', marginBottom: '32px' } },
           React.createElement('div', { style: { padding: '24px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' } },
             React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', color: '#1F3D2B' } }, 'All Products'),
-            React.createElement('button', { onClick: () => { setShowAddForm(true); setEditingProduct(null); setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', image: '', images: [] }); }, style: { background: '#C6A75E', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '10px', fontWeight: '600', cursor: 'pointer' } }, '+ Add Product')
+            React.createElement('button', { onClick: () => { setShowAddForm(true); setEditingProduct(null); setForm({ name: '', category: 'skincare', price: '', oldPrice: '', stock: '', description: '', product_size: '', size_unit: 'ml', image: '', images: [] }); }, style: { background: '#C6A75E', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '10px', fontWeight: '600', cursor: 'pointer' } }, '+ Add Product')
           ),
           React.createElement('table', { style: { width: '100%', borderCollapse: 'collapse' } },
-            React.createElement('thead', null, React.createElement('tr', { style: { background: '#F5F1E8' } }, ['Product', 'Category', 'Price', 'Stock', 'Status', 'Actions'].map(h => React.createElement('th', { key: h, style: { textAlign: h === 'Actions' ? 'right' : 'left', padding: '14px 24px', fontSize: '12px', fontWeight: '600', color: '#8B5E3C' } }, h)))),
+            React.createElement('thead', null, React.createElement('tr', { style: { background: '#F5F1E8' } }, ['Product', 'Category', 'Price', 'Size', 'Stock', 'Actions'].map(h => React.createElement('th', { key: h, style: { textAlign: h === 'Actions' ? 'right' : 'left', padding: '14px 24px', fontSize: '12px', fontWeight: '600', color: '#8B5E3C' } }, h)))),
             React.createElement('tbody', null, products.map(p =>
               React.createElement('tr', { key: p.id, style: { borderBottom: '1px solid #f0f0f0' } },
                 React.createElement('td', { style: { padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#1F3D2B', display: 'flex', alignItems: 'center', gap: '12px' } }, React.createElement('img', { src: p.image || 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=40&h=40&fit=crop', style: { width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' } }), p.name),
                 React.createElement('td', { style: { padding: '16px 24px', fontSize: '13px', color: '#8B5E3C', textTransform: 'capitalize' } }, p.category),
                 React.createElement('td', { style: { padding: '16px 24px', fontWeight: 'bold', color: '#C6A75E' } }, 'R' + (p.price || 0).toFixed(2)),
+                React.createElement('td', { style: { padding: '16px 24px', color: '#1F3D2B' } }, (p.product_size ? p.product_size + (p.size_unit || 'ml') : '-')),
                 React.createElement('td', { style: { padding: '16px 24px', color: '#1F3D2B' } }, p.stock || 0),
-                React.createElement('td', { style: { padding: '16px 24px' } }, React.createElement('button', { onClick: () => toggleActive(p.id, p.active), style: { padding: '6px 16px', borderRadius: '20px', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '12px', background: p.active ? '#dcfce7' : '#fee2e2', color: p.active ? '#166534' : '#991b1b' } }, p.active ? 'Active' : 'Inactive')),
-                React.createElement('td', { style: { padding: '16px 24px', textAlign: 'right' } }, React.createElement('button', { onClick: () => openEdit(p), style: { color: '#C6A75E', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', marginRight: '12px' } }, 'Edit'), React.createElement('button', { onClick: () => deleteProduct(p.id), style: { color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' } }, 'Delete'))
+                React.createElement('td', { style: { padding: '16px 24px', textAlign: 'right' } },
+                  React.createElement('button', { onClick: () => openEdit(p), style: { color: '#C6A75E', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', marginRight: '12px' } }, 'Edit'),
+                  React.createElement('button', { onClick: () => toggleActive(p.id, p.active), style: { color: p.active ? '#16a34a' : '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', marginRight: '12px', fontSize: '12px' } }, p.active ? 'Active' : 'Inactive'),
+                  React.createElement('button', { onClick: () => deleteProduct(p.id), style: { color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' } }, 'Del')
+                )
               )
             ))
           )
@@ -180,14 +191,25 @@ export default function AdminDashboard() {
           React.createElement('h2', { style: { fontSize: '20px', fontWeight: 'bold', color: '#1F3D2B', marginBottom: '24px' } }, editingProduct ? 'Edit Product' : 'Add New Product'),
           React.createElement('form', { onSubmit: handleSave, style: { display: 'grid', gap: '20px' } },
             React.createElement('div', null, React.createElement('label', { style: labelStyle }, 'Product Name *'), React.createElement('input', { type: 'text', value: form.name, onChange: (e: any) => setForm({...form, name: e.target.value}), required: true, style: inputStyle })),
-            React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' } },
+            React.createElement('div', null, React.createElement('label', { style: labelStyle }, 'Description'), React.createElement('textarea', { value: form.description, onChange: (e: any) => setForm({...form, description: e.target.value}), rows: 3, style: { ...inputStyle, resize: 'vertical' }, placeholder: 'Describe the product benefits...' })),
+            React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' } },
               React.createElement('div', null,
                 React.createElement('label', { style: labelStyle }, 'Category'),
                 React.createElement('select', { value: form.category, onChange: (e: any) => setForm({...form, category: e.target.value}), style: inputStyle },
                   categories.map(c => React.createElement('option', { key: c, value: c }, c))
                 )
               ),
-              React.createElement('div', null, React.createElement('label', { style: labelStyle }, 'Stock *'), React.createElement('input', { type: 'number', value: form.stock, onChange: (e: any) => setForm({...form, stock: e.target.value}), required: true, style: inputStyle }))
+              React.createElement('div', null, React.createElement('label', { style: labelStyle }, 'Stock *'), React.createElement('input', { type: 'number', value: form.stock, onChange: (e: any) => setForm({...form, stock: e.target.value}), required: true, style: inputStyle })),
+              React.createElement('div', null,
+                React.createElement('label', { style: labelStyle }, 'Size'),
+                React.createElement('div', { style: { display: 'flex', gap: '8px' } },
+                  React.createElement('input', { type: 'text', value: form.product_size, onChange: (e: any) => setForm({...form, product_size: e.target.value}), placeholder: 'e.g. 50, 100, 200', style: { flex: 2, ...inputStyle } }),
+                  React.createElement('select', { value: form.size_unit, onChange: (e: any) => setForm({...form, size_unit: e.target.value}), style: { flex: 1, ...inputStyle } },
+                    React.createElement('option', { value: 'ml' }, 'ml'),
+                    React.createElement('option', { value: 'g' }, 'g')
+                  )
+                )
+              )
             ),
             React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' } },
               React.createElement('div', null, React.createElement('label', { style: labelStyle }, 'Price (R) *'), React.createElement('input', { type: 'number', step: '0.01', value: form.price, onChange: (e: any) => setForm({...form, price: e.target.value}), required: true, style: inputStyle })),
