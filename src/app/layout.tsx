@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { CartProvider } from "@/lib/cart-context";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Nomnotho Beauty Studio | Premium Skincare & Haircare",
@@ -46,6 +47,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             
           </a>
         </CartProvider>
+        <Script
+          type="text/javascript"
+          id="hs-script-loader"
+          async
+          defer
+          src="//js-eu1.hs-scripts.com/148396420.js"
+        />
       </body>
     </html>
   );
