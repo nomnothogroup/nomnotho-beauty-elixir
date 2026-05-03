@@ -69,7 +69,7 @@ export default function CheckoutPage() {
   }
 
   const paymentMethods = [
-    { id: 'yoco', name: 'Yoco Card Payment', icon: 'Y', bg: '#1F3D2B', desc: 'Debit/Credit Card' },
+    { id:  name: 'Yoco Card Payment', icon: 'Y', bg: '#1F3D2B', desc: 'Debit/Credit Card' },
     { id: 'snapscan', name: 'SnapScan', icon: 'S', bg: '#FF5722', desc: 'Scan & Pay via SnapScan' },
     { id: 'paypal', name: 'PayPal', icon: 'P', bg: '#0070BA', desc: 'godfreysiwela@gmail.com' },
     { id: 'bank', name: 'Standard Bank EFT', icon: 'SB', bg: '#0033A0', desc: 'Account: 251443574' }
@@ -156,5 +156,6 @@ export default function CheckoutPage() {
     )
   );
 }
+
 
 

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -88,7 +88,7 @@ export default function Footer() {
                     color: '#C6A75E'
                   }}
                 >
-                  📷
+                  ??
                 </a>
                 <a
                   href="https://tiktok.com/@nomnothobeautystudio"
@@ -107,7 +107,7 @@ export default function Footer() {
                     color: '#C6A75E'
                   }}
                 >
-                  🎵
+                  ??
                 </a>
                 <a
                   href="https://facebook.com/nomnothobeautystudio"
@@ -126,7 +126,7 @@ export default function Footer() {
                     color: '#C6A75E'
                   }}
                 >
-                  📘
+                  ??
                 </a>
                 <a
                   href="https://pinterest.com/nomnothobeautystudio"
@@ -145,7 +145,7 @@ export default function Footer() {
                     color: '#C6A75E'
                   }}
                 >
-                  📌
+                  ??
                 </a>
               </div>
             </div>
@@ -273,10 +273,12 @@ export default function Footer() {
 
         <div style={{ borderTop: '1px solid rgba(245,241,232,0.1)', paddingTop: '24px', textAlign: 'center' }}>
           <p style={{ color: '#F5F1E8', opacity: 0.6, fontSize: '13px' }}>
-            © 2026 Nomnotho Beauty Studio. All rights reserved. Part of Nomnotho Group of Companies.
+            � 2026 Nomnotho Beauty Studio. All rights reserved. Part of Nomnotho Group of Companies.
           </p>
         </div>
       </div>
     </footer>
   );
 }
+
+
