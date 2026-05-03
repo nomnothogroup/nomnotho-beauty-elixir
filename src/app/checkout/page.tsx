@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { supabase } from '@/lib/supabase';
@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   }, []);
 
   const delivery = subtotal >= 1000 ? 0 : 99;
-  const discount = subtotal * 0.10;
+  const discount = subtotal >= 500 ? subtotal * 0.10 : 0;
   const total = subtotal - discount + delivery;
 
   const sendWhatsApp = () => {
@@ -184,3 +184,4 @@ export default function CheckoutPage() {
     )
   );
 }
+

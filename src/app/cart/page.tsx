@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function CartPage() {
   const { state, dispatch, subtotal } = useCart();
   const delivery = 99;
-  const discount = subtotal * 0.10;
+  const discount = subtotal >= 500 ? subtotal * 0.10 : 0;
   const total = subtotal - discount + delivery;
 
   if (state.items.length === 0) {
@@ -95,3 +95,4 @@ export default function CartPage() {
     </div>
   );
 }
+
