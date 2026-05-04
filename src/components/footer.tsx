@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -10,7 +10,7 @@ export default function Footer() {
             <p style={{ color: '#F5F1E8', opacity: 0.8, fontSize: '14px', marginBottom: '12px' }}>Premium African botanical skincare and haircare.</p>
             <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
               <a href="https://www.facebook.com/share/1AgjSsbcUe/" target="_blank" rel="noopener noreferrer" style={{ background: '#1877F2', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '16px' }}>f</a>
-              <a href="https://www.instagram.com/nomnothoonline" target="_blank" rel="noopener noreferrer" style={{ background: '#E4405F', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '16px' }}>ig</a>
+              <a href="https://www.instagram.com/nomnotho_beauty_studio?igsh=aGlrMXpieGU4ZDJp" target="_blank" rel="noopener noreferrer" style={{ background: '#E4405F', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '16px' }}>ig</a>
               <a href="https://tiktok.com/@nomnotho_beauty_studio" target="_blank" rel="noopener noreferrer" style={{ background: '#000', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '12px' }}>TT</a>
             </div>
           </div>
