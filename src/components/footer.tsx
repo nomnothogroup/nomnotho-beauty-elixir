@@ -8,7 +8,11 @@ export default function Footer() {
           <div>
             <h3 style={{ fontSize: '22px', fontWeight: 'bold', color: '#C6A75E', marginBottom: '16px' }}>Nomnotho Beauty Studio</h3>
             <p style={{ color: '#F5F1E8', opacity: 0.8, fontSize: '14px', marginBottom: '12px' }}>Premium African botanical skincare and haircare.</p>
-            <p style={{ color: '#C6A75E', fontSize: '14px', fontWeight: '600' }}>Flat R99 delivery on all orders</p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+              <a href="https://www.facebook.com/share/1AgjSsbcUe/" target="_blank" rel="noopener noreferrer" style={{ background: '#1877F2', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '16px' }}>f</a>
+              <a href="https://www.instagram.com/nomnothoonline" target="_blank" rel="noopener noreferrer" style={{ background: '#E4405F', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '16px' }}>ig</a>
+              <a href="https://tiktok.com/@nomnotho_beauty_studio" target="_blank" rel="noopener noreferrer" style={{ background: '#000', color: 'white', width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontWeight: 'bold', fontSize: '12px' }}>TT</a>
+            </div>
           </div>
           <div>
             <h4 style={{ fontWeight: '600', color: '#C6A75E', marginBottom: '12px' }}>Shop</h4>
@@ -21,18 +25,11 @@ export default function Footer() {
             <Link href='/about' style={{ display: 'block', color: '#F5F1E8', opacity: 0.7, fontSize: '14px', textDecoration: 'none', marginBottom: '8px' }}>About Us</Link>
             <Link href='/delivery' style={{ display: 'block', color: '#F5F1E8', opacity: 0.7, fontSize: '14px', textDecoration: 'none', marginBottom: '8px' }}>Delivery</Link>
             <Link href='/privacy' style={{ display: 'block', color: '#F5F1E8', opacity: 0.7, fontSize: '14px', textDecoration: 'none', marginBottom: '8px' }}>Privacy Policy</Link>
-            <Link href='/popia' style={{ display: 'block', color: '#F5F1E8', opacity: 0.7, fontSize: '14px', textDecoration: 'none', marginBottom: '8px' }}>POPIA</Link>
           </div>
           <div>
             <h4 style={{ fontWeight: '600', color: '#C6A75E', marginBottom: '12px' }}>Contact</h4>
-            <p style={{ color: '#F5F1E8', opacity: 0.7, fontSize: '14px', marginBottom: '8px' }}>info@nomnothobeautystudio.co.za</p>
-            <p style={{ color: '#F5F1E8', opacity: 0.7, fontSize: '14px', marginBottom: '12px' }}>076 128 6545</p>
-            <h4 style={{ fontWeight: '600', color: '#C6A75E', marginBottom: '8px', fontSize: '13px' }}>Payment Methods</h4>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <span style={{ background: 'white', color: '#1F3D2B', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' }}>SnapScan</span>
-              <span style={{ background: 'white', color: '#1F3D2B', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' }}>PayPal</span>
-              <span style={{ background: 'white', color: '#1F3D2B', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' }}>EFT</span>
-            </div>
+            <p style={{ color: '#F5F1E8', opacity: 0.7, fontSize: '14px' }}>info@nomnothobeautystudio.co.za</p>
+            <p style={{ color: '#F5F1E8', opacity: 0.7, fontSize: '14px' }}>076 128 6545</p>
           </div>
         </div>
         <div style={{ borderTop: '1px solid rgba(245,241,232,0.1)', paddingTop: '24px', textAlign: 'center' }}>
