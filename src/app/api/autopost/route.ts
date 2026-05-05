@@ -1,4 +1,4 @@
-﻿export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -19,8 +19,9 @@ export async function GET() {
   const p = products[Math.floor(Math.random() * products.length)];
 
   return NextResponse.json({
-    text: p.name + '\n\nR' + p.price + ' | ' + p.category + '\n\n' + (p.description || 'Premium African botanical skincare.') + '\n\nShop: www.nomnothobeautystudio.co.za\n\n#NomnothoElixir #AfricanBeauty',
+    text: p.name + '\n\nR' + p.price + ' | ' + p.category + '\n\n' + (p.description || 'Premium African botanical skincare.') + '\n\n Shop now & save: www.nomnothobeautystudio.co.za/shop | WhatsApp: 0761286545\n\n#NomnothoElixir #AfricanBeauty',
     image: p.image || 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=1080&h=1080&fit=crop&crop=entropy',
     link: 'https://www.nomnothobeautystudio.co.za/shop'
   });
 }
+
