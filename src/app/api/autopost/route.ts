@@ -1,4 +1,4 @@
-﻿export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
@@ -27,7 +27,7 @@ export async function GET() {
 
     const caption = p.name + '\n\nR' + p.price + ' | ' + p.category + '\n\n' + (p.description || 'Premium African botanical skincare.') + '\n\nShop: www.nomnothobeautystudio.co.za\n\n#NomnothoElixir #AfricanBeauty #NaturalSkincare';
 
-    const image = p.image || 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=800&h=800&fit=crop';
+    const image = p.image || 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc9?w=1080&h=1080&fit=crop&crop=entropy';
 
     const token = process.env.BUFFER_ACCESS_TOKEN;
 
@@ -78,3 +78,4 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
