@@ -35,8 +35,16 @@ export async function GET() {
       return NextResponse.json({ error: 'Buffer token not configured' }, { status: 500 });
     }
 
+    // Test Buffer connection first
     const profilesRes = await fetch('https://api.bufferapp.com/1/profiles.json?access_token=' + token);
-    const profiles: any = await profilesRes.json();
+    const profilesData: any = await profilesRes.json();
+    
+    // Buffer returns an array, not object
+    const profiles = Array.isArray(profilesData) ? profilesData : [];
+    
+    if (profiles.length === 0) {
+      return NextResponse.json({ error: 'No social profiles found in Buffer', raw: profilesData });
+    }
 
     const results: any[] = [];
 
@@ -62,6 +70,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       product: p.name,
+      profiles: profiles.map((pr: any) => pr.service),
       results
     });
 
